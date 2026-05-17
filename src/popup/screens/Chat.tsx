@@ -297,7 +297,7 @@ export default function Chat() {
                     <div
                       className="rounded-2xl px-3 py-2 break-words"
                       style={{
-                        fontSize: 18,
+                        fontSize: 22,
                         backgroundColor: mine ? '#5eccfa' : '#ffffff',
                       }}
                     >
@@ -305,7 +305,7 @@ export default function Chat() {
                         className={`flex items-baseline justify-between gap-3 mb-0.5 font-mono ${
                           mine ? 'text-white/85' : 'text-ink-faint'
                         }`}
-                        style={{ fontSize: 14 }}
+                        style={{ fontSize: 17 }}
                       >
                         <span>{fromShort}</span>
                         <span>{time}</span>
@@ -322,7 +322,7 @@ export default function Chat() {
                           className={`mt-1 inline-flex items-center gap-1 rounded-full px-2 py-0.5 font-bold ${
                             mine ? 'bg-white/30 text-white' : 'bg-[#5eccfa]/20 text-ink'
                           }`}
-                          style={{ fontSize: 13 }}
+                          style={{ fontSize: 16 }}
                         >
                           <TokenLogo token={APE} size={14} />
                           <span>{tipLabel} APE tipped</span>

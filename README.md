@@ -80,6 +80,7 @@ cd android && ./gradlew assembleDebug
 
 For a signed release AAB ready for Play Store: see
 [`MOBILE_RELEASE.md`](MOBILE_RELEASE.md).
+For iOS / App Store submission: see [`IOS_RELEASE.md`](IOS_RELEASE.md).
 
 ## Project layout
 

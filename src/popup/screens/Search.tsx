@@ -656,7 +656,7 @@ function VotePopover({
         className="flex items-center gap-2 px-2.5 py-1.5 rounded-2xl bg-bg-card border border-line shadow-lg whitespace-nowrap"
         style={{ fontSize: 14 }}
       >
-        <div className="flex items-center gap-1 font-bold text-ink">
+        <div className="flex items-center gap-1 font-bold text-ink -ml-1 mr-2">
           <span>Vote</span>
           <TokenLogo token={APE} size={18} />
         </div>

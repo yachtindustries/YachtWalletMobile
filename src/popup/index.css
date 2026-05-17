@@ -101,25 +101,6 @@ html:not(.mode-mobile) {
    and Android Chromium WebView — so click areas grow with the visuals. */
 html.mode-mobile .mobile-scale-120 { zoom: 1.2; }
 
-/* Bundled-ML-Kit camera scanner (used in Send.tsx). The plugin renders
-   the camera preview *behind* the WebView, so for the camera to be
-   visible the entire painted stack — html, body, #root content — has
-   to drop to transparent. MainActivity.java sets the Android WebView
-   itself transparent at startup; these CSS rules toggle the page's
-   own paint via a class set on both <html> and <body> while scanning.
-   Anything with `.scanner-overlay` (the Cancel button + reticle drawn
-   by Send) stays visible on top. */
-html.barcode-scanner-active,
-html.barcode-scanner-active body {
-  background: transparent !important;
-}
-body.barcode-scanner-active #root > * {
-  visibility: hidden !important;
-}
-body.barcode-scanner-active .scanner-overlay {
-  visibility: visible !important;
-}
-
 body {
   font-family: 'Roboto', system-ui, -apple-system, sans-serif;
   font-weight: 400;

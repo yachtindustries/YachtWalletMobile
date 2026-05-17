@@ -351,7 +351,7 @@ export default function Dashboard() {
               row clears the system clock comfortably. */}
           <div
             className="flex items-center justify-between px-4 pb-2"
-            style={{ paddingTop: 'calc(var(--safe-top, 0px) + 12px + 3vh)' }}
+            style={{ paddingTop: 'calc(var(--safe-top, 0px) + 6px)' }}
           >
             <div className="flex items-center gap-2 min-w-0">
               <Link
@@ -386,7 +386,7 @@ export default function Dashboard() {
 
           <div className="px-4 pb-4">
             {/* Total balance — no card, pure white text */}
-            <div className="text-center mb-4 mt-2">
+            <div className="text-center mb-2" style={{ marginTop: '2%' }}>
               <div className="text-[59px] leading-tight font-bold text-white">
                 ${headlineUsd.toLocaleString(undefined, { maximumFractionDigits: 2, minimumFractionDigits: 2 })}
               </div>
@@ -395,7 +395,7 @@ export default function Dashboard() {
 
             {/* Square action buttons */}
             {/* Action buttons sit fully on the water; 25% smaller than the row width. */}
-            <div className="grid grid-cols-3 gap-2 mb-5 mx-auto" style={{ width: '75%' }}>
+            <div className="grid grid-cols-3 gap-2 mb-2 mx-auto" style={{ width: '75%' }}>
               <ActionBtn to="/send" icon={arrowIcon} label="Send" iconSize={22} action="send" />
               <ActionBtn to="/swap" icon={swapIcon} label="Swap" iconSize={28} action="swap" />
               <ActionBtn to="/receive" icon={arrowIcon} label="Receive" rotate={180} iconSize={22} action="receive" />
@@ -404,7 +404,7 @@ export default function Dashboard() {
             {/* Tokens / NFTs tab header. marginTop bumped to 13% to push
                 the box down below the action grid. Label / count / refresh
                 icon all sized for mobile reach. */}
-            <div className="flex items-center gap-4 mb-3 pb-2" style={{ marginTop: '13%' }}>
+            <div className="flex items-center gap-4 mb-3 pb-2" style={{ marginTop: '11.5%' }}>
               <button
                 onClick={() => setView('tokens')}
                 className={`text-[22px] font-bold transition ${view === 'tokens' ? 'text-white' : 'text-white/55 hover:text-white/80'}`}

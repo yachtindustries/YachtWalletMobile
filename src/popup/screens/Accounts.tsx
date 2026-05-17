@@ -269,12 +269,12 @@ export default function Accounts() {
                     if (e.key === 'Escape') { setEditingName(false); setNameErr(null); }
                   }}
                   className="bg-white text-ink font-bold rounded-md px-2 py-0.5 focus:outline-none"
-                  style={{ fontSize: 17, width: 200 }}
+                  style={{ fontSize: 20, width: 200 }}
                   maxLength={32}
                   spellCheck={false}
                 />
                 {nameErr && (
-                  <span className="text-danger font-bold mt-0.5" style={{ fontSize: 11 }}>{nameErr}</span>
+                  <span className="text-danger font-bold mt-0.5" style={{ fontSize: 13 }}>{nameErr}</span>
                 )}
               </span>
             );
@@ -329,7 +329,7 @@ export default function Accounts() {
           </button>
         }
       />
-      <Page className="mobile-scale-120">
+      <Page>
         {mode === 'list' && (
           <>
             {(() => {
@@ -356,7 +356,7 @@ export default function Accounts() {
                       className="group relative inline-flex items-center justify-center mb-3"
                       style={{ marginTop: '-5%' }}
                     >
-                      <span className="font-bold text-white" style={{ fontSize: 19 }}>
+                      <span className="font-bold text-white" style={{ fontSize: 23 }}>
                         @{username || '…'}
                       </span>
                       <button
@@ -380,7 +380,7 @@ export default function Accounts() {
                         <input
                           autoFocus
                           className="flex-1 rounded-lg bg-white px-3 py-1.5 font-bold text-black placeholder:text-black/60 focus:outline-none"
-                          style={{ fontSize: 15 }}
+                          style={{ fontSize: 18 }}
                           value={usernameDraft}
                           onChange={(e) => setUsernameDraft(e.target.value)}
                           onKeyDown={(e) => {
@@ -393,20 +393,20 @@ export default function Accounts() {
                         <button
                           onClick={() => void saveUsername()}
                           className="px-3 py-1.5 rounded-lg bg-[#5eccfa] hover:bg-[#3eb8e8] text-white font-bold"
-                          style={{ fontSize: 13 }}
+                          style={{ fontSize: 16 }}
                         >
                           Save
                         </button>
                         <button
                           onClick={() => { setEditingUsername(false); setUsernameDraft(username); setUsernameErr(null); }}
                           className="px-3 py-1.5 rounded-lg bg-white/15 hover:bg-white/25 text-white font-bold"
-                          style={{ fontSize: 13 }}
+                          style={{ fontSize: 16 }}
                         >
                           Cancel
                         </button>
                       </div>
                       {usernameErr && (
-                        <div className="text-danger mt-1 font-bold" style={{ fontSize: 12 }}>{usernameErr}</div>
+                        <div className="text-danger mt-1 font-bold" style={{ fontSize: 14 }}>{usernameErr}</div>
                       )}
                     </div>
                   )}
@@ -421,14 +421,14 @@ export default function Accounts() {
                     rank={tier.rank}
                     fraction={prog.fraction}
                   />
-                  <div className="text-white font-bold mt-1" style={{ fontSize: 18 }}>Rank {tier.rank}</div>
+                  <div className="text-white font-bold mt-1" style={{ fontSize: 22 }}>Rank {tier.rank}</div>
 
                   {/* USD progress: left label is the account's *current* USD,
                       right label is the threshold for the next tier. The
                       labels are ~30% larger than they were before so they
                       read clearly above the bar. */}
                   <div className="w-full mt-3">
-                    <div className="flex justify-between font-bold text-white/85" style={{ fontSize: 16 }}>
+                    <div className="flex justify-between font-bold text-white/85" style={{ fontSize: 19 }}>
                       <span>{fmt(usd)}</span>
                       <span>{prog.nextMinUsd === prog.currentMinUsd ? 'Max rank' : fmt(prog.nextMinUsd)}</span>
                     </div>
@@ -466,7 +466,7 @@ export default function Accounts() {
                           } catch { /* ignore */ }
                         }}
                         className="font-mono font-bold truncate text-ink text-left hover:opacity-80"
-                        style={{ fontSize: 16 }}
+                        style={{ fontSize: 19 }}
                         title="Click to copy"
                       >
                         {addrCopied ? 'Copied' : shortAddress(active.address)}
@@ -475,7 +475,7 @@ export default function Accounts() {
                     </div>
                     <button
                       className="font-bold text-ink-dim hover:text-ink shrink-0"
-                      style={{ fontSize: 14 }}
+                      style={{ fontSize: 17 }}
                       onClick={() => {
                         setRevealId(active.id);
                         setMode('reveal-pk');
@@ -493,8 +493,8 @@ export default function Accounts() {
                     className="w-full mt-3 rounded-2xl p-3 bg-white text-left hover:opacity-90"
                   >
                     <div className="flex items-baseline justify-between mb-1">
-                      <span className="font-bold text-ink" style={{ fontSize: 15 }}>Achievements</span>
-                      <span className="font-bold text-ink" style={{ fontSize: 15 }}>
+                      <span className="font-bold text-ink" style={{ fontSize: 18 }}>Achievements</span>
+                      <span className="font-bold text-ink" style={{ fontSize: 18 }}>
                         {unlocked} / {TOTAL_ACHIEVEMENTS}
                       </span>
                     </div>
@@ -550,10 +550,10 @@ export default function Accounts() {
                   </button>
                   <div className="flex-1 min-w-0">
                     <button className="w-full flex items-baseline justify-between gap-3" onClick={() => activate(a.id)}>
-                      <span className={`font-bold truncate ${isActive ? 'text-white' : 'text-ink'}`} style={{ fontSize: 17 }}>
+                      <span className={`font-bold truncate ${isActive ? 'text-white' : 'text-ink'}`} style={{ fontSize: 20 }}>
                         {a.name}
                       </span>
-                      <span className={`font-bold shrink-0 ${isActive ? 'text-white' : 'text-ink'}`} style={{ fontSize: 17 }}>
+                      <span className={`font-bold shrink-0 ${isActive ? 'text-white' : 'text-ink'}`} style={{ fontSize: 20 }}>
                         {usdText}
                       </span>
                     </button>
@@ -561,7 +561,7 @@ export default function Accounts() {
                       <div className="flex items-center gap-2 min-w-0">
                         <span
                           className={`font-mono font-bold truncate ${isActive ? 'text-white' : 'text-ink'}`}
-                          style={{ fontSize: 13 }}
+                          style={{ fontSize: 16 }}
                         >
                           {shortAddress(a.address)}
                         </span>
@@ -569,7 +569,7 @@ export default function Accounts() {
                       </div>
                       <button
                         className={`font-bold shrink-0 ${isActive ? 'text-white hover:opacity-80' : 'text-ink-dim hover:text-ink'}`}
-                        style={{ fontSize: 14 }}
+                        style={{ fontSize: 17 }}
                         onClick={() => {
                           setRevealId(a.id);
                           setMode('reveal-pk');
@@ -589,8 +589,8 @@ export default function Accounts() {
 
             <div className="grid grid-cols-2 gap-2 mt-4">
               <button className="btn-ghost flex-col py-3" onClick={() => setMode('add-derived')}>
-                <span style={{ fontSize: 24, lineHeight: 1 }}>+</span>
-                <span style={{ fontSize: 14 }}>New account</span>
+                <span style={{ fontSize: 29, lineHeight: 1 }}>+</span>
+                <span style={{ fontSize: 17 }}>New account</span>
               </button>
               <button className="btn-ghost flex-col py-3" onClick={() => setMode('add-pk')}>
                 <span
@@ -612,7 +612,7 @@ export default function Accounts() {
                     transform: 'rotate(180deg)',
                   }}
                 />
-                <span style={{ fontSize: 14 }}>Import private key</span>
+                <span style={{ fontSize: 17 }}>Import private key</span>
               </button>
             </div>
 
@@ -640,7 +640,7 @@ export default function Accounts() {
 
         {(mode === 'add-derived' || mode === 'add-pk') && (
           <>
-            <h3 className="font-bold mb-3 text-white" style={{ fontSize: 17 }}>
+            <h3 className="font-bold mb-3 text-white" style={{ fontSize: 20 }}>
               {mode === 'add-derived' ? 'New derived account' : 'Import private key'}
             </h3>
             <label className="label">Account name (optional)</label>
@@ -666,12 +666,12 @@ export default function Accounts() {
 
         {mode === 'reveal-pk' && (
           <>
-            <h3 className="font-bold mb-3 text-white" style={{ fontSize: 17 }}>Reveal private key</h3>
+            <h3 className="font-bold mb-3 text-white" style={{ fontSize: 20 }}>Reveal private key</h3>
             {!revealedPk ? (
               <>
                 <input
                   className="w-full bg-white border-0 rounded-xl px-3 py-2.5 font-bold text-black placeholder:text-ink-faint focus:outline-none"
-                  style={{ fontSize: 15 }}
+                  style={{ fontSize: 18 }}
                   type="password"
                   autoComplete="current-password"
                   spellCheck={false}
@@ -700,7 +700,7 @@ export default function Accounts() {
               <>
                 <div
                   className="card font-mono break-all select-all font-bold"
-                  style={{ fontSize: 16 }}
+                  style={{ fontSize: 19 }}
                 >
                   {revealedPk}
                 </div>
@@ -715,8 +715,8 @@ export default function Accounts() {
 
         {mode === 'reveal-mnemonic' && (
           <>
-            <h3 className="font-bold mb-1 text-white" style={{ fontSize: 17 }}>Reveal recovery phrase</h3>
-            <p className="text-white/85 mb-3 font-bold" style={{ fontSize: 18 }}>
+            <h3 className="font-bold mb-1 text-white" style={{ fontSize: 20 }}>Reveal recovery phrase</h3>
+            <p className="text-white/85 mb-3 font-bold" style={{ fontSize: 22 }}>
               The recovery phrase derives every account in this wallet. Whoever holds it can spend all your funds.
             </p>
             {!revealedMnemonic ? (
@@ -744,7 +744,7 @@ export default function Accounts() {
                       <div
                         key={i}
                         className="bg-bg-soft border border-line rounded-lg px-2 py-1.5 font-bold"
-                        style={{ fontSize: 16 }}
+                        style={{ fontSize: 19 }}
                       >
                         <span className="text-ink-faint mr-1 font-bold">{i + 1}.</span>
                         <span className="font-mono font-bold">{w}</span>

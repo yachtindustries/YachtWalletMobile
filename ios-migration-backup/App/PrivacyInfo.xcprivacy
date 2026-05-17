@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <!-- Privacy Manifest. Required by Apple since iOS 17 for any app
+         touching certain "required reason" APIs. Yacht collects no data,
+         performs no tracking, and uses only the bare minimum of those
+         APIs (UserDefaults via Capacitor Preferences). -->
+
+    <!-- We don't track users across apps/websites. No SDK / pixel /
+         analytics anywhere in the app. -->
+    <key>NSPrivacyTracking</key>
+    <false/>
+    <key>NSPrivacyTrackingDomains</key>
+    <array/>
+
+    <!-- We do not collect any data types from Apple's enumerated list.
+         Vault material stays on-device; network calls go directly to
+         public chain RPCs and metadata services, none of which we
+         operate or harvest. -->
+    <key>NSPrivacyCollectedDataTypes</key>
+    <array/>
+
+    <!-- Required-reason API declarations. Capacitor's Preferences plugin
+         persists app settings via UserDefaults; declare it. -->
+    <key>NSPrivacyAccessedAPITypes</key>
+    <array>
+        <dict>
+            <key>NSPrivacyAccessedAPIType</key>
+            <string>NSPrivacyAccessedAPICategoryUserDefaults</string>
+            <key>NSPrivacyAccessedAPITypeReasons</key>
+            <array>
+                <!-- CA92.1: Access info from same app, per documentation. -->
+                <string>CA92.1</string>
+            </array>
+        </dict>
+    </array>
+</dict>
+</plist>

@@ -332,25 +332,25 @@ export default function Swap() {
         )}
 
         <div className="card mb-1">
-          <div className="text-[11px] text-ink-dim mb-2 flex justify-between items-center">
+          <div className="text-[13px] text-ink-dim mb-2 flex justify-between items-center">
             <span>You pay</span>
             <div className="flex items-center gap-1">
               <button
-                className="px-2 py-0.5 rounded-md bg-bg-soft border border-line text-ink-dim hover:text-brand hover:border-brand text-[10px]"
+                className="px-2 py-0.5 rounded-md bg-bg-soft border border-line text-ink-dim hover:text-brand hover:border-brand text-[12px]"
                 onClick={() => setFraction(0.25)}
                 disabled={spendableA <= 0}
               >
                 25%
               </button>
               <button
-                className="px-2 py-0.5 rounded-md bg-bg-soft border border-line text-ink-dim hover:text-brand hover:border-brand text-[10px]"
+                className="px-2 py-0.5 rounded-md bg-bg-soft border border-line text-ink-dim hover:text-brand hover:border-brand text-[12px]"
                 onClick={() => setFraction(0.5)}
                 disabled={spendableA <= 0}
               >
                 50%
               </button>
               <button
-                className="px-2 py-0.5 rounded-md bg-brand/10 border border-brand/30 text-brand hover:bg-brand/20 text-[10px] font-medium"
+                className="px-2 py-0.5 rounded-md bg-brand/10 border border-brand/30 text-brand hover:bg-brand/20 text-[12px] font-medium"
                 onClick={() => setFraction(1)}
                 disabled={spendableA <= 0}
               >
@@ -361,7 +361,7 @@ export default function Swap() {
           <div className="flex items-center gap-2">
             <input
               className="bg-transparent flex-1 font-semibold focus:outline-none w-0 min-w-0"
-              style={{ fontSize: 30 }}
+              style={{ fontSize: 36 }}
               inputMode="decimal"
               value={amountIn}
               onChange={(e) => setAmountIn(e.target.value)}
@@ -371,20 +371,20 @@ export default function Swap() {
               className="flex items-center gap-2 bg-bg-soft border border-line rounded-xl px-2 py-2 hover:border-brand"
               onClick={() => setPickerFor('A')}
             >
-              <TokenLogo token={tokenA} size={31} />
-              <span className="font-bold" style={{ fontSize: 16 }}>{tokenA.symbol.slice(0, 6)}</span>
+              <TokenLogo token={tokenA} size={37} />
+              <span className="font-bold" style={{ fontSize: 19 }}>{tokenA.symbol.slice(0, 6)}</span>
             </button>
           </div>
           <div className="flex items-center justify-between mt-1">
-            <span className="text-ink-faint" style={{ fontSize: 14 }}>
+            <span className="text-ink-faint" style={{ fontSize: 17 }}>
               {inUsd != null ? `≈ $${inUsd}` : ''}
             </span>
-            <span className={`font-bold ${overSpendable ? 'text-danger' : 'text-ink-faint'}`} style={{ fontSize: 14 }}>
+            <span className={`font-bold ${overSpendable ? 'text-danger' : 'text-ink-faint'}`} style={{ fontSize: 17 }}>
               {spendableA.toLocaleString(undefined, { maximumFractionDigits: 3 })}
             </span>
           </div>
           {overSpendable && (
-            <div className="mt-1 text-[11px] text-danger">
+            <div className="mt-1 text-[13px] text-danger">
               Insufficient {tokenA.symbol}.
             </div>
           )}
@@ -420,24 +420,24 @@ export default function Swap() {
         </div>
 
         <div className="card mt-1">
-          <div className="text-[11px] text-ink-dim mb-2">
+          <div className="text-[13px] text-ink-dim mb-2">
             You receive {quoting && <span className="text-ink-faint">· quoting…</span>}
           </div>
           <div className="flex items-center gap-2">
-            <div className="flex-1 font-semibold text-ink" style={{ fontSize: 30 }}>
+            <div className="flex-1 font-semibold text-ink" style={{ fontSize: 36 }}>
               {quote ? Number(quote.amountOutDisplay).toLocaleString(undefined, { maximumFractionDigits: 3 }) : '—'}
             </div>
             <button
               className="flex items-center gap-2 bg-bg-soft border border-line rounded-xl px-2 py-2 hover:border-brand"
               onClick={() => setPickerFor('B')}
             >
-              <TokenLogo token={tokenB} size={31} />
-              <span className="font-bold" style={{ fontSize: 16 }}>{tokenB.symbol.slice(0, 6)}</span>
+              <TokenLogo token={tokenB} size={37} />
+              <span className="font-bold" style={{ fontSize: 19 }}>{tokenB.symbol.slice(0, 6)}</span>
             </button>
           </div>
           <div className="flex items-center justify-between mt-1 text-ink-faint">
-            <span style={{ fontSize: 14 }}>{outUsd != null ? `≈ $${outUsd}` : ''}</span>
-            <span className="font-bold" style={{ fontSize: 14 }}>{balB.toLocaleString(undefined, { maximumFractionDigits: 3 })}</span>
+            <span style={{ fontSize: 17 }}>{outUsd != null ? `≈ $${outUsd}` : ''}</span>
+            <span className="font-bold" style={{ fontSize: 17 }}>{balB.toLocaleString(undefined, { maximumFractionDigits: 3 })}</span>
           </div>
         </div>
 

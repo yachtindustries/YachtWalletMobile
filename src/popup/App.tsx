@@ -33,6 +33,20 @@ export default function App() {
     void refreshSettings();
   }, [refreshStatus, refreshSettings]);
 
+  // On mobile the vault auto-locks when the app is backgrounded. When the
+  // user comes back, re-check vault status so a locked vault immediately
+  // sends them to the Unlock screen instead of letting them tap into a
+  // wallet screen that then fails with "wallet is locked". The event is
+  // dispatched by lib/mobile-rpc.ts on app resume; it never fires on the
+  // desktop extension build, so this is a no-op there.
+  useEffect(() => {
+    function onResumed() {
+      void refreshStatus();
+    }
+    window.addEventListener('yacht:resumed', onResumed);
+    return () => window.removeEventListener('yacht:resumed', onResumed);
+  }, [refreshStatus]);
+
   if (isRequestRoute) {
     return (
       <Routes>

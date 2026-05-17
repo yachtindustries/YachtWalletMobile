@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { Page, Screen, TopBar } from '../components/Layout';
 import { TokenLogo } from '../components/TokenLogo';
@@ -149,100 +149,49 @@ export default function Send() {
 
   const overSpendable = parseFloat(amount || '0') > spendable;
 
-  // Scanner state. While `scanning` is true the WebView is painted
-  // transparent (see .barcode-scanner-active in index.css) and the
-  // ML Kit camera preview shows through behind us. The Cancel overlay
-  // is the only visible JSX in that state.
-  const [scanning, setScanning] = useState(false);
-
+  // QR scanning uses the official @capacitor/barcode-scanner plugin. It
+  // presents its own native full-screen scanner UI and handles the camera
+  // permission prompt itself (iOS reads NSCameraUsageDescription from
+  // Info.plist), so there's no transparent-WebView overlay or manual
+  // permission flow here. Lazy-imported so the desktop extension build
+  // never pulls in the mobile-only native plugin.
   async function scanQr() {
-    // Lazy-imported so the desktop extension build never pulls in the mobile
-    // barcode-scanning plugin (which has no Chrome runtime). startScan()
-    // uses the ML Kit barcode lib bundled into the APK rather than Google's
-    // Code Scanner Service module — so it works on every Android, including
-    // ones without Play Services.
-    let mod: typeof import('@capacitor-mlkit/barcode-scanning');
+    let mod: typeof import('@capacitor/barcode-scanner');
     try {
-      mod = await import('@capacitor-mlkit/barcode-scanning');
+      mod = await import('@capacitor/barcode-scanner');
     } catch (e) {
       setErr(`Scan failed to load: ${(e as Error).message}`);
       return;
     }
-    const { BarcodeScanner, BarcodeFormat } = mod;
-
-    // Two-step permission flow: check first, only request if not yet
-    // granted. requestPermissions() on its own can return 'granted'
-    // immediately without prompting (when permission is already given)
-    // OR can silently no-op on some Android builds when invoked while
-    // the permission state is 'denied' rather than 'prompt'. Splitting
-    // the flow lets us show a clear "go to Settings" message instead of
-    // hanging on a transparent screen with no camera.
-    try {
-      const status = await BarcodeScanner.checkPermissions();
-      if (status.camera !== 'granted' && status.camera !== 'limited') {
-        const requested = await BarcodeScanner.requestPermissions();
-        if (requested.camera !== 'granted' && requested.camera !== 'limited') {
-          setErr(
-            requested.camera === 'denied'
-              ? 'Camera blocked. Open Settings → Apps → Yacht → Permissions and allow Camera, then try again.'
-              : 'Camera permission needed to scan QR codes.',
-          );
-          return;
-        }
-      }
-    } catch (e) {
-      setErr(`Camera permission error: ${(e as Error).message}`);
-      return;
-    }
-
-    // Listener fires once per recognized barcode. We stop the scanner on
-    // the first match so we don't spam state updates as the camera holds
-    // focus on the QR.
-    let listener: { remove: () => Promise<void> } | null = null;
-    const finish = async () => {
-      try { await BarcodeScanner.stopScan(); } catch { /* already stopped */ }
-      try { await listener?.remove(); } catch { /* already removed */ }
-      document.documentElement.classList.remove('barcode-scanner-active');
-      document.body.classList.remove('barcode-scanner-active');
-      setScanning(false);
-    };
+    const { CapacitorBarcodeScanner, CapacitorBarcodeScannerTypeHint } = mod;
 
     try {
-      listener = await BarcodeScanner.addListener('barcodeScanned', async (ev) => {
-        const raw = ev.barcode.rawValue?.trim();
-        await finish();
-        if (!raw) return;
-        // Wallet QRs are sometimes plain hex addresses, sometimes EIP-681
-        // URIs ("ethereum:0xabc..." optionally followed by chain id and
-        // params). Strip the prefix and any trailing chain/param data so
-        // we leave just the 0x address.
-        const m = raw.match(/^(?:ethereum|ape|apechain):\s*([^@?\s]+)/i);
-        const addr = (m ? m[1] : raw).trim();
-        if (!isValidEvmAddress(addr)) {
-          setErr(`Scanned QR is not a valid address: ${addr.slice(0, 12)}…`);
-          return;
-        }
-        setTo(addr);
-        setErr(null);
+      const result = await CapacitorBarcodeScanner.scanBarcode({
+        hint: CapacitorBarcodeScannerTypeHint.QR_CODE,
+        scanInstructions: 'Point camera at a wallet QR code',
       });
-
-      document.documentElement.classList.add('barcode-scanner-active');
-      document.body.classList.add('barcode-scanner-active');
-      setScanning(true);
-      // Stash the cancel function so the JSX overlay's onClick can call it.
-      cancelScanRef.current = finish;
-      await BarcodeScanner.startScan({ formats: [BarcodeFormat.QrCode] });
+      const raw = result?.ScanResult?.trim();
+      if (!raw) return;
+      // Wallet QRs are sometimes plain hex addresses, sometimes EIP-681
+      // URIs ("ethereum:0xabc..." optionally followed by chain id and
+      // params). Strip the prefix and any trailing chain/param data so we
+      // leave just the 0x address.
+      const m = raw.match(/^(?:ethereum|ape|apechain):\s*([^@?\s]+)/i);
+      const addr = (m ? m[1] : raw).trim();
+      if (!isValidEvmAddress(addr)) {
+        setErr(`Scanned QR is not a valid address: ${addr.slice(0, 12)}…`);
+        return;
+      }
+      setTo(addr);
+      setErr(null);
     } catch (e) {
-      await finish();
-      const msg = (e as Error).message ?? '';
-      if (/cancel/i.test(msg)) return;
+      // The plugin rejects with a cancel/closed message when the user
+      // dismisses the native scanner without scanning — not an error.
+      const msg = (e as Error)?.message ?? '';
+      if (/cancel|cancel|closed|dismiss/i.test(msg)) return;
       setErr(`Scan failed: ${msg}`);
     }
   }
-
-  // Stable ref to the in-flight `finish` closure so the Cancel overlay
-  // (rendered in the same component) can call it without re-binding.
-  const cancelScanRef = useRef<(() => Promise<void>) | null>(null);
 
   async function pasteFromClipboard() {
     // Manifest declares "clipboardRead" so navigator.clipboard.readText()
@@ -260,39 +209,8 @@ export default function Send() {
     if (input) input.focus();
   }
 
-  // Defensive cleanup: if the user navigates away (Android back button,
-  // tab switch) while the scanner is up, tear it down so we don't leave
-  // the WebView transparent or the camera locked.
-  useEffect(() => {
-    return () => {
-      if (cancelScanRef.current) void cancelScanRef.current();
-    };
-  }, []);
-
   return (
     <Screen>
-      {scanning && (
-        <div
-          className="scanner-overlay fixed inset-0 z-50 flex flex-col items-center justify-between pointer-events-none"
-          style={{ paddingTop: 'calc(var(--safe-top, 0px) + 16px)', paddingBottom: 'calc(var(--safe-bottom, 0px) + 24px)' }}
-        >
-          <div className="text-white font-bold text-center px-4 py-2 rounded-xl bg-black/55 pointer-events-auto" style={{ fontSize: 15 }}>
-            Point camera at a QR code
-          </div>
-          <div
-            aria-hidden
-            className="border-2 border-white/85 rounded-2xl"
-            style={{ width: '70vw', height: '70vw', boxShadow: '0 0 0 100vmax rgba(0,0,0,0.45)' }}
-          />
-          <button
-            onClick={() => { void cancelScanRef.current?.(); }}
-            className="pointer-events-auto px-6 py-3 rounded-xl text-white font-bold bg-black/65 active:bg-black/80"
-            style={{ fontSize: 17 }}
-          >
-            Cancel
-          </button>
-        </div>
-      )}
       <TopBar title="Send" />
       <Page className="mobile-scale-120">
         <div className="flex items-center justify-between">

@@ -40,14 +40,44 @@ globalThis.__yachtMobileRpc = async (msg: unknown): Promise<RpcReply> => {
   }
 };
 
-// Lock the vault as soon as the app goes to the background. On mobile a
-// "back to home screen" should be treated like closing the wallet window —
-// requiring the password to come back. This is stricter than the desktop
-// auto-lock alarm, which is intentional for a phone-resident wallet.
+// Mobile auto-lock policy. The vault is NOT force-locked the instant the
+// app is backgrounded — that made the wallet re-prompt for the password on
+// every quick app-switch. Instead we note when the app left the foreground
+// and, on resume, lock only if more wall-clock time has elapsed than the
+// user's configured auto-lock interval (Settings → Auto-lock,
+// `autoLockMinutes`; 0 disables auto-lock entirely). While the app stays
+// foregrounded the existing chrome.alarms-based timer (armed by the
+// background on unlock) still applies unchanged.
+let backgroundedAt: number | null = null;
+
 App.addListener('appStateChange', (state) => {
   if (!state.isActive) {
-    void handle({ type: 'vault.lock' }, FAKE_SENDER).catch(() => { /* best effort */ });
+    backgroundedAt = Date.now();
+    return;
   }
+  // Resumed from background.
+  void (async () => {
+    try {
+      if (backgroundedAt != null) {
+        const awayMs = Date.now() - backgroundedAt;
+        backgroundedAt = null;
+        const settings = (await handle(
+          { type: 'settings.get' },
+          FAKE_SENDER,
+        )) as { autoLockMinutes?: number };
+        const mins = settings?.autoLockMinutes ?? 0;
+        if (mins > 0 && awayMs >= mins * 60_000) {
+          await handle({ type: 'vault.lock' }, FAKE_SENDER).catch(() => { /* best effort */ });
+        }
+      }
+    } finally {
+      // Always re-check status so App.tsx drops to the Unlock screen if the
+      // vault got locked (here or by the foreground timer), and stays put
+      // otherwise. Plain window event — App.tsx needs no Capacitor import
+      // and it simply never fires on the desktop extension build.
+      window.dispatchEvent(new Event('yacht:resumed'));
+    }
+  })();
 });
 
 export {};

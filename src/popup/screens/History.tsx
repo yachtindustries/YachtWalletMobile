@@ -202,16 +202,16 @@ export default function History() {
                       )}
                     </div>
                     <div className="min-w-0">
-                      <div className="font-semibold flex items-center gap-1.5" style={{ fontSize: 17 }}>
+                      <div className="font-semibold flex items-center gap-1.5" style={{ fontSize: 20 }}>
                         <ActionGlyph type={t.type} />
                         <span>{label}</span>
                       </div>
                       {counterparty && (
-                        <div className="text-ink-faint font-mono truncate" style={{ fontSize: 13 }}>
+                        <div className="text-ink-faint font-mono truncate" style={{ fontSize: 16 }}>
                           {t.type === 'receive' ? `from ${shortAddress(counterparty)}` : `to ${shortAddress(counterparty)}`}
                         </div>
                       )}
-                      <div className="text-ink-faint mt-0.5" style={{ fontSize: 12 }}>
+                      <div className="text-ink-faint mt-0.5" style={{ fontSize: 14 }}>
                         {t.timestamp ? new Date(t.timestamp * 1000).toLocaleString() : ''}
                       </div>
                     </div>
@@ -231,9 +231,9 @@ export default function History() {
                         <Amount key={i} t={x} sign={x.direction === 'in' ? '+' : x.direction === 'out' ? '-' : ''} />
                       ))
                     ) : (
-                      <div className="font-bold text-ink-dim" style={{ fontSize: 16 }}>—</div>
+                      <div className="font-bold text-ink-dim" style={{ fontSize: 19 }}>—</div>
                     )}
-                    <div className="mt-0.5 flex items-center justify-end gap-1" style={{ fontSize: 12 }}>
+                    <div className="mt-0.5 flex items-center justify-end gap-1" style={{ fontSize: 14 }}>
                       <span className={t.status === 'success' ? 'text-ink-faint' : 'text-black font-bold'}>
                         {t.status === 'success' ? 'Success' : t.status === 'failed' ? 'Failed' : 'Pending'}
                       </span>
@@ -302,7 +302,7 @@ function Amount({ t, sign }: { t: HistoryTransfer; sign: string }) {
   // gain/loss; the new colour pair feels neutral and brand-aligned.
   const color = sign === '+' ? 'text-[#5eccfa]' : 'text-black';
   return (
-    <div className={`font-bold ${color}`} style={{ fontSize: 16 }}>
+    <div className={`font-bold ${color}`} style={{ fontSize: 19 }}>
       {sign}{amount} {symbol}
     </div>
   );

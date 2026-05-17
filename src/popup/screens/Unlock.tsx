@@ -62,7 +62,11 @@ export default function Unlock() {
             never crash into the input regardless of viewport height. */}
         <div className="flex-1 flex flex-col items-center justify-center min-h-0 overflow-hidden mt-2">
           <span key={waveTick} className="yacht-wave inline-block">
-            <img src={logoUrl} alt="Yacht" className="object-contain max-h-full" style={{ width: 250, height: 250 }} />
+            {/* translateY pushes the boat ~20% of its height downward so
+                that when the soft keyboard shrinks this zone the icon is
+                clipped from the bottom instead of sliding half off the
+                top of the screen. The Yacht title above is untouched. */}
+            <img src={logoUrl} alt="Yacht" className="object-contain max-h-full" style={{ width: 250, height: 250, transform: 'translateY(30%)' }} />
           </span>
         </div>
 

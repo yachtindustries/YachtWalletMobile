@@ -23,8 +23,8 @@
     "test:watch": "vitest"
   },
   "dependencies": {
-    "@capacitor-mlkit/barcode-scanning": "^8.1.0",
     "@capacitor/app": "^8.1.0",
+    "@capacitor/barcode-scanner": "^3.0.2",
     "@capacitor/core": "^8.3.3",
     "@capacitor/preferences": "^8.0.1",
     "@capacitor/splash-screen": "^8.0.1",
